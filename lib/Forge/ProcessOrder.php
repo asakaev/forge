@@ -8,27 +8,23 @@ use Forge\Base\Product2;
 use Forge\Stripe\Config;
 use Forge\Stripe\CreateSession;
 use Forge\Stripe\LineItems;
-use Forge\Stripe\ListTaxRates;
 use Forge\Stripe\Product;
-use Forge\Stripe\TaxRate;
-use Forge\Stripe\TaxRates;
 
 
 final class ProcessOrder {
 
   private Config $conf;
 
-  final function apply(LineItems $li, State $state): Either {
-    return ListTaxRates::make($this->conf->secret())->apply()
-      ->flatMap(fn(array $json) => TaxRate::fromJson($json))
-      ->map(fn(array $xs) => TaxRates::apply(TaxRate::collectActive($xs)))
-      ->flatMap(fn(TaxRates $taxRates) =>
-        CreateSession::make($this->conf)->apply(
-          $li->withProducts(self::groupProducts($li->products())),
-          $taxRates,
-          $state->toMetadata()
-        )
-      );
+  final function apply(LineItems $li, State $state, Tax $tax, Shipping $shipping): Either {
+    $groupedProducts = self::groupProducts($li->products());
+    $s = Product::apply('', "Shipping ({$shipping->carrier()})", $shipping->priceCents(), 1, '');
+    $v = Product::apply('', 'VAT', $tax->value(), 1, '');
+    $products = array_merge($groupedProducts, [$s, $v]);
+
+    return CreateSession::make($this->conf)->apply(
+      $li->withProducts($products),
+      $state->toMetadata()
+    );
   }
 
   /**

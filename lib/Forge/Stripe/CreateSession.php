@@ -61,10 +61,9 @@ final class CreateSession {
     string    $successUrl,
     string    $cancelUrl,
     LineItems $lineItems,
-    TaxRates  $taxRates,
     Metadata  $metadata
   ): FormData {
-      $a = LineItems::toFormData($lineItems, $taxRates);
+      $a = LineItems::toFormData($lineItems);
       $b = Metadata::toFormData($metadata);
 
       $c = FormData::apply(
@@ -82,7 +81,7 @@ final class CreateSession {
     );
   }
 
-  final function apply(LineItems $lineItems, TaxRates $taxRates, Metadata $metadata): Either {
+  final function apply(LineItems $lineItems, Metadata $metadata): Either {
     return self::request(
       self::$url,
       self::$headers,
@@ -90,7 +89,6 @@ final class CreateSession {
         $this->conf->successUrl(),
         $this->conf->cancelUrl(),
         $lineItems,
-        $taxRates,
         $metadata
       )->encode(),
       $this->conf->secret()

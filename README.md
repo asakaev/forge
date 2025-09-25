@@ -24,20 +24,16 @@ application.
 
 ### Tax Rates
 
-[Dynamic tax rates](https://stripe.com/docs/payments/checkout/taxes?tax-calculation=tax-rates#dynamic-tax-rates)
-using information from your customer (for example, their billing or shipping address).
-Stripe attempts to match your customer’s location to one of those predefined [tax rates](https://dashboard.stripe.com/tax-rates).
-`forge` using an [inclusive](https://stripe.com/docs/billing/taxes/tax-rates#inclusive-vs-exclusive-tax) tax rate.
+[Taxes](https://support.webasyst.com/shop-script/11311/taxes/) and shipping are calculated in Shop-Script and sent to Stripe as line items, ensuring consistent pricing without relying on Stripe's [Tax Rates](https://docs.stripe.com/payments/checkout/use-manual-tax-rates).
 
 ### Design
 
 ```
-Customer -> Wa -> ProcessOrder [Stripe.ListTaxRates, Stripe.CreateSession]
+Customer -> Wa -> ProcessOrder [Stripe.CreateSession]
 Stripe   -> Wa -> ProcessEvent [Wa.Init, Wa.StoreTransaction]
 ```
 
-Tax Rates are synced before each payment.
-State between order placement and fulfilment implemented using [Metadata](https://stripe.com/docs/api/metadata).
+Order state between placement and fulfillment is tracked using Stripe [Metadata](https://stripe.com/docs/api/metadata).
 
 ### License
 MIT

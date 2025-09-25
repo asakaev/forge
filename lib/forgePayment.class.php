@@ -9,11 +9,13 @@ use Forge\Extension\LineItemsOps;
 use Forge\ProcessEvent;
 use Forge\ProcessOrder;
 use Forge\SaveTransaction;
+use Forge\Shipping;
 use Forge\State;
 use Forge\Stripe\Config;
 use Forge\Stripe\LineItems;
 use Forge\Stripe\Props;
 use Forge\Stripe\SessionCompleted;
+use Forge\Tax;
 use Forge\Util\Http;
 use Forge\Util\Json;
 
@@ -49,9 +51,15 @@ final class forgePayment extends waPayment {
     return $eConfig->flatMap(fn(Config $conf) =>
       LineItemsOps::fromOrder($order_data)->flatMap(fn(LineItems $lineItems) =>
         $eOrderId->flatMap(fn($orderId) =>
-          ProcessOrder::make($conf)->apply(
-            $lineItems,
-            State::apply($this->merchant_id, $orderId)
+          Tax::fromOrder($order_data)->flatMap(fn($tax) =>
+            Shipping::fromOrder($order_data)->flatMap(fn($shipping) =>
+              ProcessOrder::make($conf)->apply(
+                $lineItems,
+                State::apply($this->merchant_id, $orderId),
+                $tax,
+                $shipping
+              )
+            )
           )
         )
       )
