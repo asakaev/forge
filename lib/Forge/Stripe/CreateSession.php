@@ -32,7 +32,7 @@ final class CreateSession {
       $body = curl_exec($curl);
       $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       curl_close($curl);
-      return Product2::apply($httpCode, $body);
+      return Product2::of($httpCode, $body);
     });
   }
 
@@ -52,8 +52,8 @@ final class CreateSession {
       Json::parse($tuple->_2())
         ->flatMap(fn($json) => self::failure($json))
         ->fold(
-          fn($e) => Left::apply($e),
-          fn($a) => Left::apply($a)
+          fn($e) => Left::of($e),
+          fn($a) => Left::of($a)
         );
   }
 
@@ -66,7 +66,7 @@ final class CreateSession {
       $a = LineItems::toFormData($lineItems);
       $b = Metadata::toFormData($metadata);
 
-      $c = FormData::apply(
+      $c = FormData::of(
         array(
           'success_url' => $successUrl,
           'cancel_url' => $cancelUrl,
@@ -95,7 +95,7 @@ final class CreateSession {
     )->flatMap(fn($x) => self::decode($x));
   }
 
-  function __construct($conf) {
+  private function __construct($conf) {
     $this->conf = $conf;
   }
 

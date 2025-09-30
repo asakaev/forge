@@ -9,7 +9,7 @@ final class Unit {
   private function __construct() {}
   private function __clone() {}
 
-  final static function apply(): Unit {
+  final static function of(): Unit {
     if (self::$instance === null) {
       self::$instance = new Unit();
     }

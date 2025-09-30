@@ -21,21 +21,21 @@ final class Metadata {
 
   final static function toFormData(Metadata $metadata): FormData {
     return ArrayOps::fold($metadata->value(), FormData::empty(), function (FormData $acc, Product2 $tuple) {
-      $data1 = FormData::apply(array("metadata[{$tuple->_1()}]" => $tuple->_2()));
+      $data1 = FormData::of(array("metadata[{$tuple->_1()}]" => $tuple->_2()));
       return $acc->combine($data1);
     });
   }
   
   final static function fromJson(array $json): Either {
     return Either::nullable($json['data']['object']['metadata'], new Exception('Metadata.empty'))
-      ->map(fn($metadata) => Metadata::apply($metadata));
+      ->map(fn($metadata) => Metadata::of($metadata));
   }
 
-  function __construct(array $value) {
+  private function __construct(array $value) {
     $this->value = $value;
   }
 
-  final static function apply(array $value): Metadata {
+  final static function of(array $value): Metadata {
     return new Metadata($value);
   }
 }

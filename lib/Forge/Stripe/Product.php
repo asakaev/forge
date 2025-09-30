@@ -31,7 +31,7 @@ final class Product {
   }
 
   final function withName(string $name): Product {
-    return Product::apply(
+    return Product::of(
       $this->id,
       $name,
       $this->amountCents,
@@ -41,7 +41,7 @@ final class Product {
   }
 
   final function withAmountCents(int $amountCents): Product {
-    return Product::apply(
+    return Product::of(
       $this->id,
       $this->name,
       $amountCents,
@@ -50,7 +50,13 @@ final class Product {
     );
   }
 
-  final function __construct(string $id, string $name, int $amountCents, int $quantity, string $parentId) {
+  private function __construct(
+    string $id,
+    string $name,
+    int $amountCents,
+    int $quantity,
+    string $parentId
+  ) {
     $this->id = $id;
     $this->name = $name;
     $this->amountCents = $amountCents;
@@ -58,7 +64,7 @@ final class Product {
     $this->parentId = $parentId;
   }
 
-  final static function apply(
+  final static function of(
     string $id,
     string $name,
     int $amountCents,

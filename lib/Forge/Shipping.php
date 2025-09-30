@@ -24,7 +24,7 @@ final class Shipping {
 
     return $eShipping->flatMap(fn($shipping) =>
       $eShippingName->map(fn($shippingName) =>
-        Shipping::apply(Money::toCents($shipping), $shippingName)
+        Shipping::of(Money::toCents($shipping), $shippingName)
       )
     )->leftMap(fn($e) => new Exception($e));
   }
@@ -34,7 +34,7 @@ final class Shipping {
     $this->carrier = $carrier;
   }
 
-  final static function apply(int $priceCents, string $carrier): Shipping {
+  final static function of(int $priceCents, string $carrier): Shipping {
     return new Shipping($priceCents, $carrier);
   }
 }

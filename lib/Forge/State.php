@@ -21,7 +21,7 @@ final class State {
   }
 
   final function toMetadata(): Metadata {
-    return Metadata::apply(
+    return Metadata::of(
       array(
         'merchant_id' => $this->merchantId,
         'order_id'    => $this->orderId
@@ -36,7 +36,7 @@ final class State {
 
     return $eMerchantId->flatMap(fn($mid) =>
       $eOrderId->map(fn($oid) =>
-        State::apply($mid, $oid)
+        State::of($mid, $oid)
       )
     )->leftMap(fn($e) => new Exception($e));
   }
@@ -54,17 +54,17 @@ final class State {
 
     return $eMerchantId->flatMap(fn($mid) =>
       $eOrderId->map(fn($oid) =>
-        State::apply($mid, $oid)
+        State::of($mid, $oid)
       )
     )->leftMap(fn($e) => new Exception($e));
   }
 
-  function __construct(string $merchantId, string $orderId) {
+  private function __construct(string $merchantId, string $orderId) {
     $this->merchantId = $merchantId;
     $this->orderId = $orderId;
   }
 
-  final static function apply(string $merchantId, string $orderId): State {
+  final static function of(string $merchantId, string $orderId): State {
     return new State($merchantId, $orderId);
   }
 

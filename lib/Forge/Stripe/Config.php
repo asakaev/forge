@@ -21,13 +21,13 @@ final class Config {
     return $this->cancelUrl;
   }
 
-  function __construct($secret, $successUrl, $failureUrl) {
+  private function __construct($secret, $successUrl, $failureUrl) {
     $this->secret = $secret;
     $this->successUrl = $successUrl;
     $this->cancelUrl = $failureUrl;
   }
 
-  final static function apply($secret, $successUrl, $cancelUrl): Config {
+  final static function of($secret, $successUrl, $cancelUrl): Config {
     return new Config($secret, $successUrl, $cancelUrl);
   }
 }

@@ -32,7 +32,7 @@ final class forgePayment extends waPayment {
 
   final function payment($payment_form_data, $order_data, $auto_submit = false): string {
     $eUrls = Either::attempt(fn() => $this->getAdapter())->map(fn(waAppPayment $a) =>
-      Product2::apply(
+      Product2::of(
         $a->getBackUrl(waAppPayment::URL_SUCCESS),
         $a->getBackUrl(waAppPayment::URL_FAIL)
       )
@@ -42,7 +42,7 @@ final class forgePayment extends waPayment {
 
     $eConfig = $eUrls->flatMap(fn(Product2 $tuple) =>
       $eSecret->map(fn($secret) =>
-        Config::apply($secret, $tuple->_1(), $tuple->_2())
+        Config::of($secret, $tuple->_1(), $tuple->_2())
       )
     );
 
@@ -55,7 +55,7 @@ final class forgePayment extends waPayment {
             Shipping::fromOrder($order_data)->flatMap(fn($shipping) =>
               ProcessOrder::make($conf)->apply(
                 $lineItems,
-                State::apply($this->merchant_id, $orderId),
+                State::of($this->merchant_id, $orderId),
                 $tax,
                 $shipping
               )

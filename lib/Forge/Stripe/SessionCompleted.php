@@ -38,7 +38,7 @@ final class SessionCompleted {
   final static function fromJson($json): Either {
     $eTypeOk = Either::cond(
       $json['type'] === 'checkout.session.completed',
-      Unit::apply(),
+      Unit::of(),
       "Type.unknown: {$json['type']}"
     );
 
@@ -54,7 +54,7 @@ final class SessionCompleted {
           $eCurrency->flatMap(fn($cur) =>
             $eAmountTotal->flatMap(fn($at) =>
               $eCreated->map(fn($created) =>
-                SessionCompleted::apply($id, $metadata, $cur, $at, $created)
+                SessionCompleted::of($id, $metadata, $cur, $at, $created)
               )
             )
           )
@@ -64,7 +64,7 @@ final class SessionCompleted {
     ->leftMap(fn($e) => new Exception($e));
   }
 
-  function __construct(
+  private function __construct(
     string   $id,
     Metadata $metadata,
     string   $currency,
@@ -78,7 +78,7 @@ final class SessionCompleted {
     $this->created = $created;
   }
 
-  final static function apply(
+  final static function of(
     string   $id,
     Metadata $metadata,
     string   $currency,

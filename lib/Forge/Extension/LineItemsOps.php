@@ -22,7 +22,7 @@ final class LineItemsOps {
 
     return $eCurrency->flatMap(fn($currency) =>
       $eProducts->map(fn($products) =>
-        LineItems::apply($currency, $products)
+        LineItems::of($currency, $products)
       )
     )->leftMap(fn($e) => new Exception($e));
   }

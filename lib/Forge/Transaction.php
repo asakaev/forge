@@ -29,7 +29,7 @@ final class Transaction {
     );
   }
 
-  function __construct(
+  private function __construct(
     string $orderId,
     string $nativeId,
     int $amount,
@@ -47,7 +47,7 @@ final class Transaction {
     $this->dateTime = $dateTime;
   }
 
-  final static function apply(
+  final static function of(
     string $orderId,
     string $nativeId,
     int $amount,

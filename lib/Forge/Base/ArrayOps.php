@@ -28,7 +28,7 @@ final class ArrayOps {
   final static function map(array $xs, Closure $f): array {
     $ys = [];
     foreach ($xs as $k => $v) {
-      $ys[] = $f(Product2::apply($k, $v));
+      $ys[] = $f(Product2::of($k, $v));
     }
     return $ys;
   }
@@ -36,7 +36,7 @@ final class ArrayOps {
   final static function fold(array $xs, $zero, Closure $f) {
     $acc = $zero;
     foreach ($xs as $k => $v) {
-      $acc = $f($acc, Product2::apply($k, $v));
+      $acc = $f($acc, Product2::of($k, $v));
     }
     return $acc;
   }
@@ -44,10 +44,10 @@ final class ArrayOps {
   final static function traverse(array $xs, Closure $f): Either {
     $reducer = fn(Either $acc, $x) =>
       $acc->fold(
-        fn($e)  => Left::apply($e),
+        fn($e)  => Left::of($e),
         fn($ys) => $f($x)->map(fn($a) => ArrayOps::append($ys, $a))
       );
-    return array_reduce($xs, $reducer, Right::apply(array()));
+    return array_reduce($xs, $reducer, Right::of(array()));
   }
 
   /**

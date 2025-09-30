@@ -13,18 +13,18 @@ abstract class Either {
   abstract function leftMap(Closure $f): Either;
 
   final static function cond($test, $right, $left): Either {
-    return $test ? Right::apply($right) : Left::apply($left);
+    return $test ? Right::of($right) : Left::of($left);
   }
 
   final static function nullable($a, $ifEmpty): Either {
-    return $a === null ? Left::apply($ifEmpty) : Right::apply($a);
+    return $a === null ? Left::of($ifEmpty) : Right::of($a);
   }
 
   final static function attempt(Closure $block): Either {
     try {
-      return Right::apply($block(null));
+      return Right::of($block(null));
     } catch (Exception $e) {
-      return Left::apply($e);
+      return Left::of($e);
     }
   }
 }
@@ -45,14 +45,14 @@ final class Left extends Either {
   }
 
   final function leftMap(Closure $f): Left {
-    return Left::apply($f($this->a));
+    return Left::of($f($this->a));
   }
 
-  function __construct($a) {
+  private function __construct($a) {
     $this->a = $a;
   }
 
-  final static function apply($a): Left {
+  final static function of($a): Left {
     return new Left($a);
   }
 
@@ -62,7 +62,7 @@ final class Right extends Either {
   private $b;
 
   final function map(Closure $f): Right {
-    return Right::apply($f($this->b));
+    return Right::of($f($this->b));
   }
 
   final function flatMap(Closure $f): Either {
@@ -77,11 +77,11 @@ final class Right extends Either {
     return $this;
   }
 
-  function __construct($b) {
+  private function __construct($b) {
     $this->b = $b;
   }
 
-  final static function apply($b): Right {
+  final static function of($b): Right {
     return new Right($b);
   }
 }

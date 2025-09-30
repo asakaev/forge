@@ -24,7 +24,7 @@ final class ProductOps {
       $eName->flatMap(fn($n) =>
         $ePrice->flatMap(fn($p) =>
           $eQuantity->map(fn($q) =>
-            Product::apply($id, $n, Money::toCents($p), $q, $parentId)
+            Product::of($id, $n, Money::toCents($p), $q, $parentId)
           )
         )
       )

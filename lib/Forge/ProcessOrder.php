@@ -17,8 +17,8 @@ final class ProcessOrder {
 
   final function apply(LineItems $li, State $state, Tax $tax, Shipping $shipping): Either {
     $groupedProducts = self::groupProducts($li->products());
-    $s = Product::apply('', "Shipping ({$shipping->carrier()})", $shipping->priceCents(), 1, '');
-    $v = Product::apply('', 'VAT', $tax->value(), 1, '');
+    $s = Product::of('', "Shipping ({$shipping->carrier()})", $shipping->priceCents(), 1, '');
+    $v = Product::of('', 'VAT', $tax->value(), 1, '');
     $products = array_merge($groupedProducts, [$s, $v]);
 
     return CreateSession::make($this->conf)->apply(
@@ -39,8 +39,8 @@ final class ProcessOrder {
       $m = $acc->_2();
 
       return $p->parentId() === ''
-        ? Product2::apply(ArrayOps::append($xs, $p), $m)
-        : Product2::apply(
+        ? Product2::of(ArrayOps::append($xs, $p), $m)
+        : Product2::of(
           $xs,
           ArrayOps::updated(
             $m,
@@ -50,7 +50,7 @@ final class ProcessOrder {
         );
     };
 
-    return array_reduce($xs, $reducer, Product2::apply([], []));
+    return array_reduce($xs, $reducer, Product2::of([], []));
   }
 
   /**
@@ -97,7 +97,7 @@ final class ProcessOrder {
     return self::group(self::partition($products));
   }
 
-  function __construct(Config $conf) {
+  private function __construct(Config $conf) {
     $this->conf = $conf;
   }
 

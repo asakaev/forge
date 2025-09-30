@@ -24,7 +24,7 @@ final class LineItems {
   }
 
   final function withProducts(array $products): LineItems {
-    return LineItems::apply($this->currency, $products);
+    return LineItems::of($this->currency, $products);
   }
 
   final static function toFormData(LineItems $lineItems): FormData {
@@ -33,7 +33,7 @@ final class LineItems {
         $i = $tuple->_1(); /** @var int $i */
         $p = $tuple->_2(); /** @var Product $p */
 
-        $data = FormData::apply(
+        $data = FormData::of(
           array(
             "line_items[$i][price_data][currency]" => $currency,
             "line_items[$i][price_data][product_data][name]" => $p->name(),
@@ -57,7 +57,7 @@ final class LineItems {
     $this->products = $products;
   }
 
-  final static function apply(string $currency, array $products): LineItems {
+  final static function of(string $currency, array $products): LineItems {
     return new LineItems($currency, $products);
   }
 }

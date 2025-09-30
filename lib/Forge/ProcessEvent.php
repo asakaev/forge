@@ -25,7 +25,7 @@ final class ProcessEvent {
   final static function transaction(SessionCompleted $sc): Either {
     return State::fromMetadata($sc->metadata())
       ->map(fn(State $s) =>
-        Transaction::apply(
+        Transaction::of(
           $s->orderId(),
           $sc->id(),
           $sc->amountTotal(),
@@ -37,7 +37,7 @@ final class ProcessEvent {
     );
   }
 
-  function __construct(SaveTransaction $saveTransaction, ExecAppCallback $execAppCallback) {
+  private function __construct(SaveTransaction $saveTransaction, ExecAppCallback $execAppCallback) {
     $this->saveTransaction = $saveTransaction;
     $this->execAppCallback = $execAppCallback;
   }

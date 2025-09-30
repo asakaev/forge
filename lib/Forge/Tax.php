@@ -15,7 +15,7 @@ final class Tax {
 
   final static function fromOrder($order): Either {
     return Either::nullable($order['tax'], new Exception('Tax.empty'))->map(fn($tax) =>
-      Tax::apply(Money::toCents($tax))
+      Tax::of(Money::toCents($tax))
     );
   }
 
@@ -23,7 +23,7 @@ final class Tax {
     $this->value = $value;
   }
 
-  final static function apply(int $value): Tax {
+  final static function of(int $value): Tax {
     return new Tax($value);
   }
 }

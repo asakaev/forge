@@ -15,7 +15,7 @@ final class FormData {
   }
 
   final function combine(FormData $that): FormData {
-    return FormData::apply(array_merge($this->value, $that->value()));
+    return FormData::of(array_merge($this->value, $that->value()));
   }
 
   final function encode(): string {
@@ -27,11 +27,11 @@ final class FormData {
     return new FormData([]);
   }
 
-  function __construct(array $value) {
+  private function __construct(array $value) {
     $this->value = $value;
   }
 
-  final static function apply(array $value): FormData {
+  final static function of(array $value): FormData {
     return new FormData($value);
   }
 
